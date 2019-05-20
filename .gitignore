@@ -1,2 +1,4 @@
 chip8emu-agk
 media/*.byc
+*.exe
+*.dll
