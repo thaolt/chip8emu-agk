@@ -40,7 +40,7 @@ emu as chip8cpu
 
 chip8emu_init(emu)
 
-chip8emu_load_rom(emu, "roms/Tetris_Fran_Dachille_1991.ch8")
+chip8emu_load_rom(emu, "roms/TETRIS.ch8")
 
 screenBuf = CreateRenderImage(512, 768, 0, 0)
 SetImageMagFilter(screenBuf, 0)
@@ -54,7 +54,7 @@ sprBg = CreateSprite(LoadImage("bg.png"))
 SetSpriteTransparency(sprBg, 1)
 
 for i = 1 to 9
-	AddVirtualButton(i, 118 + (mod(i-1,3) * 92), 400 + ((i-1)/3) * 92, 80)
+	AddVirtualButton(i, 118 + (mod(i-1,3) * 92), 584 - ((i-1)/3) * 92, 80)
 	SetVirtualButtonText(i, Str(i))
 next i
 
