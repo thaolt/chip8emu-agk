@@ -367,21 +367,3 @@ function chip8emu_exec_cycle(cpu ref as chip8cpu)
 		endcase
 	endselect
 endfunction
-
-function chip8_render_disp(cpu ref as chip8cpu, imgId)
-	SetRenderToImage(imgId, 0)
-	ClearScreen()
-	color = MakeColor(255,255,255)
-	
-	for y = 0 to 31
-		for x = 0 to 63
-			if cpu.disp[y*64 + x] > 0
-				DrawBox(x*10, y*10, x*10+10, y*10+10, color, color, color, color, 1)
-				//DrawLine(x*10, y*10, x*10, y*10, 255, 255, 255)
-			endif
-		next x
-	next y
-	
-	cpu.draw_flag = 0
-	SetRenderToScreen()
-endfunction
