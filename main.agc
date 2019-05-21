@@ -4,6 +4,7 @@ function chip8_render_disp(cpu ref as chip8cpu, imgId)
 	SetRenderToImage(imgId, 0)
 	ClearScreen()
 	color = MakeColor(135,135,3)
+	color = MakeColor(105,105,3)
 	DrawBox(0, 0, 448, 223, color, color, color, color, 1)
 	color = MakeColor(32,60,50)
 	
@@ -13,7 +14,6 @@ function chip8_render_disp(cpu ref as chip8cpu, imgId)
 				dx = x*7
 				dy = y*7
 				DrawBox(dx, dy, dx+7, dy+6, color, color, color, color, 1)
-				//DrawLine(x*10, y*10, x*10, y*10, 255, 255, 255)
 			endif
 		next x
 	next y
@@ -41,7 +41,7 @@ emu as chip8cpu
 
 chip8emu_init(emu)
 
-chip8emu_load_rom(emu, "roms/Tron.ch8")
+chip8emu_load_rom(emu, "roms/TETRIS")
 
 screenBuf = CreateRenderImage(512, 768, 0, 0)
 SetImageMagFilter(screenBuf, 0)
@@ -54,6 +54,31 @@ SetSpriteX(sprDisplay, 32)
 sprBg = CreateSprite(LoadImage("bg.png"))
 SetSpriteTransparency(sprBg, 1)
 
+for i = 1 to 9
+	AddVirtualButton(i, 82 + (mod(i-1,3) * 112), 350 + ((i-1)/3) * 112, 100)
+	SetVirtualButtonText(i, Str(i))
+next i
+
+AddVirtualButton(0xA, 82, 686, 100)
+SetVirtualButtonText(0xA, "A")
+
+AddVirtualButton(0x10, 194, 686, 100)
+SetVirtualButtonText(0x10, "0")
+
+AddVirtualButton(0xB, 306, 686, 100)
+SetVirtualButtonText(0xB, "B")
+
+AddVirtualButton(0xC, 418, 686, 100)
+SetVirtualButtonText(0xC, "C")
+
+AddVirtualButton(0xD, 418, 574, 100)
+SetVirtualButtonText(0xD, "D")
+
+AddVirtualButton(0xE, 418, 462, 100)
+SetVirtualButtonText(0xE, "E")
+
+AddVirtualButton(0xF, 418, 350, 100)
+SetVirtualButtonText(0xF, "F")
 
 lastSync# = Timer()
 lastCycle# = lastSync#
@@ -76,13 +101,16 @@ do
 	if (now# - lastTick# > 0.0166666) /* 60 hz */
 		chip8emu_timer_tick(emu)
 		lastTick# = Timer()
+		for i = 1 to 0x10
+			emu.keystate[mod(i, 0x10)] = GetVirtualButtonState(i)
+		next i
 		continue
 	endif
 	
 	
-	
 	if (now# - lastSync# > 0.0333333) /* 30 hz */
 		Sync()
+		
 		lastSync# = Timer()
     endif
     
