@@ -3,7 +3,6 @@
 function chip8_render_disp(cpu ref as chip8cpu, imgId)
 	SetRenderToImage(imgId, 0)
 	ClearScreen()
-	color = MakeColor(135,135,3)
 	color = MakeColor(105,105,3)
 	DrawBox(0, 0, 448, 223, color, color, color, color, 1)
 	color = MakeColor(32,60,50)
@@ -28,13 +27,13 @@ endfunction
 SetErrorMode(2)
 
 // set window properties
-SetWindowTitle( "Chip8 Emulator" )
+SetWindowTitle( "CHIP8 Emulator" )
 SetWindowSize( 512, 768, 0 )
 
 // set display properties
 SetVirtualResolution( 512, 768 )
 SetOrientationAllowed( 1, 1, 0, 0 )
-SetSyncRate( 60, 0 ) // 30fps instead of 60 to save battery
+SetSyncRate( 30, 0 ) // 30fps instead of 60 to save battery
 UseNewDefaultFonts( 1 ) // since version 2.0.20 we can use nicer default fonts
 
 emu as chip8cpu
@@ -55,38 +54,57 @@ sprBg = CreateSprite(LoadImage("bg.png"))
 SetSpriteTransparency(sprBg, 1)
 
 for i = 1 to 9
-	AddVirtualButton(i, 82 + (mod(i-1,3) * 112), 350 + ((i-1)/3) * 112, 100)
+	AddVirtualButton(i, 118 + (mod(i-1,3) * 92), 400 + ((i-1)/3) * 92, 80)
 	SetVirtualButtonText(i, Str(i))
 next i
 
-AddVirtualButton(0xA, 82, 686, 100)
+AddVirtualButton(0xA, 118, 676, 80)
 SetVirtualButtonText(0xA, "A")
 
-AddVirtualButton(0x10, 194, 686, 100)
+AddVirtualButton(0x10, 210, 676, 80)
 SetVirtualButtonText(0x10, "0")
 
-AddVirtualButton(0xB, 306, 686, 100)
+AddVirtualButton(0xB, 302, 676, 80)
 SetVirtualButtonText(0xB, "B")
 
-AddVirtualButton(0xC, 418, 686, 100)
+AddVirtualButton(0xC, 394, 676, 80)
 SetVirtualButtonText(0xC, "C")
 
-AddVirtualButton(0xD, 418, 574, 100)
+AddVirtualButton(0xD, 394, 584, 80)
 SetVirtualButtonText(0xD, "D")
 
-AddVirtualButton(0xE, 418, 462, 100)
+AddVirtualButton(0xE, 394, 492, 80)
 SetVirtualButtonText(0xE, "E")
 
-AddVirtualButton(0xF, 418, 350, 100)
+AddVirtualButton(0xF, 394, 400, 80)
 SetVirtualButtonText(0xF, "F")
+
+imgBtnUp = LoadImage("red_btnup.png")
+imgBtnDn = LoadImage("red_btndn.png")
+
+
+btnRST = 0x11
+AddVirtualButton(btnRST, 465, 315, 40)
+SetVirtualButtonAlpha(btnRST, 255)
+SetVirtualButtonImageUp(btnRST, imgBtnUp)
+SetVirtualButtonImageDown(btnRST, imgBtnDn)
+
+btnLD = 0x12
+AddVirtualButton(btnLD, 52, 315, 40)
+SetVirtualButtonText(btnLD, "LD")
 
 lastSync# = Timer()
 lastCycle# = lastSync#
 lastTick# = lastSync#
-lastKeyCheck# = lastSync#
 
 do
 	now# = Timer()
+	
+	if GetVirtualButtonReleased(btnRST)=1
+		chip8emu_init(emu)
+		sync()
+		continue
+	endif
 	
 	if (emu.draw_flag > 0)
 		chip8_render_disp(emu, screenBuf)
