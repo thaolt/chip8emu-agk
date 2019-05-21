@@ -8,7 +8,7 @@ app_type=0
 url_scheme=
 keystore_path=
 orientation=0
-output_path=
+output_path=E:\\Workspaces\\chip8emu-agk\\chip8emu-agk.apk
 ouya_icon_path=
 package_name=
 permission_flags=7
@@ -49,8 +49,8 @@ FILE_0=main.agc;-1
 FILE_1=chip8emu.agc;-1
 
 [files]
-FILE_NAME_0=1;main.agc;1011;0
-FILE_NAME_1=0;chip8emu.agc;1232;1
+FILE_NAME_0=1;main.agc;137;0
+FILE_NAME_1=0;chip8emu.agc;2785;1
 
 [project]
 description=

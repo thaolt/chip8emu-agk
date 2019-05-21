@@ -1,7 +1,10 @@
+
 #include "chip8emu.agc"
 
 function chip8_render_disp(cpu ref as chip8cpu, imgId)
+	
 	SetRenderToImage(imgId, 0)
+	SetVirtualResolution( 512, 768 )
 	ClearScreen()
 	color = MakeColor(105,105,3)
 	DrawBox(0, 0, 448, 223, color, color, color, color, 1)
@@ -18,6 +21,7 @@ function chip8_render_disp(cpu ref as chip8cpu, imgId)
 	next y
 	
 	cpu.draw_flag = 0
+	
 	SetRenderToScreen()
 endfunction
 
@@ -28,7 +32,7 @@ SetErrorMode(2)
 
 // set window properties
 SetWindowTitle( "CHIP8 Emulator" )
-SetWindowSize( 512, 768, 0 )
+SetWindowSize( 512, 768, 0)
 
 // set display properties
 SetVirtualResolution( 512, 768 )
@@ -50,8 +54,12 @@ sprDisplay = CreateSprite(screenBuf)
 SetSpriteY(sprDisplay, 60)
 SetSpriteX(sprDisplay, 32)
 
-sprBg = CreateSprite(LoadImage("bg.png"))
+imgBg = LoadImage("bg.png")
+SetImageMagFilter(imgBg, 1)
+SetImageMinFilter(imgBg, 1) 
+sprBg = CreateSprite(imgBg)
 SetSpriteTransparency(sprBg, 1)
+
 
 for i = 1 to 9
 	AddVirtualButton(i, 118 + (mod(i-1,3) * 92), 584 - ((i-1)/3) * 92, 80)
