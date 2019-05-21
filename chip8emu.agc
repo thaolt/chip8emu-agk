@@ -3,7 +3,6 @@ type chip8cpu
 	disp as integer[2047]
 	mem as integer[4095]
 	stack as integer[23]
-	keystate as integer[15]
 	
 	I as integer
 	pc as integer // program counter
@@ -44,7 +43,6 @@ endfunction
 function chip8emu_init(cpu ref as chip8cpu)
 	for i = 0 to cpu.V.length
 		cpu.V[i] = 0
-		cpu.keystate[i] = 0
 	next i
 	
 	for i = 0 to cpu.disp.length
@@ -54,7 +52,7 @@ function chip8emu_init(cpu ref as chip8cpu)
 	chip8emu_clear_disp(cpu)
 	
 	/* Load fontset */
-    for i = 0 to i < chip8_fontset.length
+    for i = 0 to chip8_fontset.length
         cpu.mem[i] = chip8_fontset[i]
     next i
 	
@@ -283,14 +281,18 @@ function chip8emu_exec_cycle(cpu ref as chip8cpu)
 		case 0xE000:
 			select (cpu.opcode && 0x00FF)
 				case 0x009E: /* EX9E: Skips the next instruction if the key stored in VX is pressed */
-					if (cpu.keystate[ cpu.V[(cpu.opcode && 0x0F00) >> 8] ] > 0)
+					key = cpu.V[(cpu.opcode && 0x0F00) >> 8]
+					if key = 0 then key = 0x10
+					if (GetVirtualButtonState(key) > 0)
 						inc cpu.pc, 4
 					else
 						inc cpu.pc, 2
 					endif
 				endcase
 				case 0x00A1: /* EXA1: Skips the next instruction if the key stored in VX isn't pressed */
-					if not (cpu.keystate[ cpu.V[(cpu.opcode && 0x0F00) >> 8] ] > 0)
+					key = cpu.V[(cpu.opcode && 0x0F00) >> 8]
+					if key = 0 then key = 0x10
+					if not (GetVirtualButtonState(key) > 0)
 						inc cpu.pc, 4
 					else
 						inc cpu.pc, 2
@@ -309,9 +311,10 @@ function chip8emu_exec_cycle(cpu ref as chip8cpu)
 					inc cpu.pc, 2
 				endcase
 				case 0x000A: /* FX0A: A key press is awaited, and then stored in VX. (blocking) */
-					for i = 0 to cpu.keystate.length
-						if (cpu.keystate[i] > 0)
-							cpu.V[(cpu.opcode && 0x0F00) >> 8] = i
+					X = (cpu.opcode && 0x0F00) >> 8
+					for i = 1 to 0x10
+						if (GetVirtualButtonState(X) > 0)
+							cpu.V[X] = mod(i, 0x10)
 							inc cpu.pc, 2
 							exit
 						endif

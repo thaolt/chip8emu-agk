@@ -83,6 +83,7 @@ SetVirtualButtonText(0xF, "F")
 lastSync# = Timer()
 lastCycle# = lastSync#
 lastTick# = lastSync#
+lastKeyCheck# = lastSync#
 
 do
 	now# = Timer()
@@ -101,16 +102,12 @@ do
 	if (now# - lastTick# > 0.0166666) /* 60 hz */
 		chip8emu_timer_tick(emu)
 		lastTick# = Timer()
-		for i = 1 to 0x10
-			emu.keystate[mod(i, 0x10)] = GetVirtualButtonState(i)
-		next i
 		continue
 	endif
 	
 	
 	if (now# - lastSync# > 0.0333333) /* 30 hz */
 		Sync()
-		
 		lastSync# = Timer()
     endif
     
