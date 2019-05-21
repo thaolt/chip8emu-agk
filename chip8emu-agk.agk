@@ -41,15 +41,15 @@ deep_link=
 
 [html5_settings]
 commands_used=0
-dynamic_memory=0
-output_path=
+dynamic_memory=1
+output_path=E:\\Workspaces\\chip8emu-agk\\HTML5
 
 [projectfiles]
 FILE_0=main.agc;-1
 FILE_1=chip8emu.agc;-1
 
 [files]
-FILE_NAME_0=1;main.agc;1049;0
+FILE_NAME_0=1;main.agc;1812;0
 FILE_NAME_1=0;chip8emu.agc;10438;1
 
 [project]
