@@ -41,7 +41,7 @@ emu as chip8cpu
 
 chip8emu_init(emu)
 
-chip8emu_load_rom(emu, "roms/TETRIS")
+chip8emu_load_rom(emu, "roms/Tetris_Fran_Dachille_1991.ch8")
 
 screenBuf = CreateRenderImage(512, 768, 0, 0)
 SetImageMagFilter(screenBuf, 0)
