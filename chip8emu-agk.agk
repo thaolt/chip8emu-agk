@@ -1,16 +1,15 @@
-
 [apk_settings]
 alias=
 app_icon_path=
 notif_icon_path=
-app_name=
+app_name=CHIP8 Emulator
 app_type=0
 url_scheme=
 keystore_path=
 orientation=0
-output_path=E:\\Workspaces\\chip8emu-agk\\chip8emu-agk.apk
+output_path=/home/thaolt/Workspaces/chip8emu-agk/chip8emu.apk
 ouya_icon_path=
-package_name=
+package_name=me.thaolt.chip8emu
 permission_flags=7
 play_app_id=
 sdk_version=1
@@ -47,10 +46,12 @@ output_path=E:\\Workspaces\\chip8emu-agk\\HTML5
 [projectfiles]
 FILE_0=main.agc;-1
 FILE_1=chip8emu.agc;-1
+FILE_2=chip8callback.agc;-1
 
 [files]
-FILE_NAME_0=1;main.agc;137;0
-FILE_NAME_1=0;chip8emu.agc;2785;1
+FILE_NAME_0=0;main.agc;1128;0
+FILE_NAME_1=0;chip8emu.agc;1785;1
+FILE_NAME_2=0;chip8callback.agc;533;2
 
 [project]
 description=

@@ -1,6 +1,6 @@
 type chip8cpu
 	V as integer[15]
-	disp as integer[2047]
+	disp as integer[8191]
 	mem as integer[4095]
 	stack as integer[23]
 	
@@ -11,6 +11,15 @@ type chip8cpu
 	
 	delay_timer as integer
 	sound_timer as integer
+	
+	disp_width as integer
+	disp_height as integer
+	
+	/* emulation mode
+	 * 0 - CHIP8
+	 * 1 - CHIP8 HiRES
+	 * 2 - SCHIP */
+	mode as integer
 
 	draw_flag as integer
 endtype
@@ -34,7 +43,8 @@ global chip8_fontset as integer[79] = [
   0xF0, 0x80, 0xF0, 0x80, 0x80  /* F */ ]
 
 function chip8emu_clear_disp(cpu ref as chip8cpu)
-	for i = 0 to cpu.disp.length
+	length = cpu.disp_width * cpu.disp_height - 1
+	for i = 0 to length
 		cpu.disp[i] = 0
 	next i
 	cpu.draw_flag = 1
@@ -48,6 +58,9 @@ function chip8emu_init(cpu ref as chip8cpu)
 	for i = 0 to cpu.disp.length
 		cpu.disp[i] = 0
 	next i
+	
+	cpu.disp_width = 64
+	cpu.disp_height = 32
 	
 	chip8emu_clear_disp(cpu)
 	
@@ -66,7 +79,8 @@ function chip8emu_init(cpu ref as chip8cpu)
 	cpu.sp = 0
 	cpu.delay_timer = 0
 	cpu.sound_timer = 0
-	cpu.draw_flag = 1
+	cpu.mode = 0
+	cpu.draw_flag = 0
 endfunction
 
 function chip8emu_load_rom(cpu ref as chip8cpu, filename$)
@@ -86,11 +100,15 @@ endfunction
 
 function chip8emu_exec_cycle(cpu ref as chip8cpu)
 	cpu.opcode = cpu.mem[cpu.pc] << 8 || cpu.mem[cpu.pc + 1]
-	
 	select (cpu.opcode && 0xF000)
 		case 0x0000:
 			select (cpu.opcode)
 				case 0x00E0: /* clear screen */
+					chip8emu_clear_disp(cpu)
+					inc cpu.pc, 2
+				endcase
+				
+				case 0x0230: /* clear screen */
 					chip8emu_clear_disp(cpu)
 					inc cpu.pc, 2
 				endcase
@@ -106,7 +124,15 @@ function chip8emu_exec_cycle(cpu ref as chip8cpu)
 		endcase
 		
 		case 0x1000: /* 1NNN: absolute jump */
-			cpu.pc = cpu.opcode && 0xFFF
+			if (cpu.pc = 0x200) and ((cpu.mem[0x200] << 8 || cpu.mem[0x201]) = 0x1260)
+				/* 64x64 hi-res mode */
+				cpu.mode = 1
+				cpu.disp_width = 64
+				cpu.disp_height = 64
+				cpu.pc = 0x2C0  // Make the interperter jump to address 0x2c0
+			else
+				cpu.pc = cpu.opcode && 0xFFF
+			endif
 		endcase
 		
 		case 0x2000: /* 2NNN: call subroutine */
@@ -258,6 +284,8 @@ function chip8emu_exec_cycle(cpu ref as chip8cpu)
 			height = cpu.opcode && 0x000F
 			sprite as integer[15]
 			
+			if height = 0 then height = 0xF
+			
 			for i = 0 to height - 1
 				sprite[i] = cpu.mem[cpu.I + i]
 			next i
@@ -265,8 +293,8 @@ function chip8emu_exec_cycle(cpu ref as chip8cpu)
 			cpu.V[0xF] = 0
 			for y = 0 to height - 1
 				for x = 0 to 8 - 1
-					dx = Mod(xo + x, 64) /* display x or dest x*/
-					dy = Mod(yo + y, 32)
+					dx = Mod(xo + x, cpu.disp_width) /* display x or dest x*/
+					dy = Mod(yo + y,  cpu.disp_height)
 					if not ((sprite[y] && (0x80 >> x)) = 0) /* 0x80 -> 10000000b */
 						if cpu.V[0xF] = 0 and cpu.disp[(dx + (dy * 64))] > 0 then cpu.V[0xF] = 1
 						cpu.disp[dx + (dy * 64)] = cpu.disp[dx + (dy * 64)] ~~ 1
@@ -281,18 +309,14 @@ function chip8emu_exec_cycle(cpu ref as chip8cpu)
 		case 0xE000:
 			select (cpu.opcode && 0x00FF)
 				case 0x009E: /* EX9E: Skips the next instruction if the key stored in VX is pressed */
-					key = cpu.V[(cpu.opcode && 0x0F00) >> 8]
-					if key = 0 then key = 0x10
-					if (GetVirtualButtonState(key) > 0)
+					if (chip8emu_get_keystate(cpu, cpu.V[(cpu.opcode && 0x0F00) >> 8]) > 0)
 						inc cpu.pc, 4
 					else
 						inc cpu.pc, 2
 					endif
 				endcase
 				case 0x00A1: /* EXA1: Skips the next instruction if the key stored in VX isn't pressed */
-					key = cpu.V[(cpu.opcode && 0x0F00) >> 8]
-					if key = 0 then key = 0x10
-					if not (GetVirtualButtonState(key) > 0)
+					if not (chip8emu_get_keystate(cpu, cpu.V[(cpu.opcode && 0x0F00) >> 8]) > 0)
 						inc cpu.pc, 4
 					else
 						inc cpu.pc, 2
@@ -312,8 +336,8 @@ function chip8emu_exec_cycle(cpu ref as chip8cpu)
 				endcase
 				case 0x000A: /* FX0A: A key press is awaited, and then stored in VX. (blocking) */
 					X = (cpu.opcode && 0x0F00) >> 8
-					for i = 1 to 0x10
-						if (GetVirtualButtonState(X) > 0)
+					for i = 0 to 0xF
+						if (chip8emu_get_keystate(cpu, i) > 0)
 							cpu.V[X] = mod(i, 0x10)
 							inc cpu.pc, 2
 							exit
