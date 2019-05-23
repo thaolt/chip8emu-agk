@@ -61,10 +61,14 @@ for i = 1 to 9
 next i
 
 AddVirtualButton(0xA, 118, 676, 80)
-SetVirtualButtonText(0xA, "A")
+SetVirtualButtonAlpha(0xA, 255)
+SetVirtualButtonImageUp(0xA, LoadImage("btnAup.png"))
+SetVirtualButtonImageDown(0xA,  LoadImage("btnAdn.png"))
 
 AddVirtualButton(0x10, 210, 676, 80)
-SetVirtualButtonText(0x10, "0")
+SetVirtualButtonAlpha(0x10, 255)
+SetVirtualButtonImageUp(0x10, LoadImage("btn0up.png"))
+SetVirtualButtonImageDown(0x10,  LoadImage("btn0dn.png"))
 
 AddVirtualButton(0xB, 302, 676, 80)
 SetVirtualButtonText(0xB, "B")
@@ -96,10 +100,16 @@ AddVirtualButton(btnLD, 52, 315, 40)
 SetVirtualButtonText(btnLD, "LD")
 
 
+btnPWR = 0x13
+AddVirtualButton(btnPWR, 468, 29, 42)
+SetVirtualButtonAlpha(btnPWR, 255)
+SetVirtualButtonImageUp(btnPWR, LoadImage("pwrup.png"))
+SetVirtualButtonImageDown(btnPWR, LoadImage("pwrdn.png"))
+
 emu as chip8cpu
 chip8emu_init(emu)
 
-chip8emu_load_rom(emu, "roms/Pong_1_player.ch8")
+chip8emu_load_rom(emu, "roms/TETRIS.ch8")
 
 lastSync# = Timer()
 lastCycle# = lastSync#
@@ -114,12 +124,16 @@ do
 		continue
 	endif
 	
+	if (GetVirtualButtonReleased(btnPWR) = 1)
+		exit
+	endif
+	
 	if (emu.draw_flag > 0)
 		chip8emu_draw(emu, screenBuf)
 		continue
 	endif
 	
-	if (now# - lastCycle# > 0.002) /* 1000 hz */
+	if (now# - lastCycle# > 0.001) /* 1000 hz */
 		chip8emu_exec_cycle(emu)
 		lastCycle# = Timer()
 		continue
