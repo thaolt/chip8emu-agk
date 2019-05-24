@@ -1,7 +1,7 @@
 type chip8cpu
 	V as integer[15]
-	disp as integer[8191]
-	mem as integer[4095]
+	disp as integer /* memblock id */
+	mem as integer /* memblock id */
 	stack as integer[23]
 	
 	I as integer
@@ -20,6 +20,8 @@ type chip8cpu
 	 * 1 - CHIP8 HiRES
 	 * 2 - SCHIP */
 	mode as integer
+	
+	rom as integer
 
 	draw_flag as integer
 endtype
@@ -43,10 +45,9 @@ global chip8_fontset as integer[79] = [
   0xF0, 0x80, 0xF0, 0x80, 0x80  /* F */ ]
 
 function chip8emu_clear_disp(cpu ref as chip8cpu)
-	length = cpu.disp_width * cpu.disp_height - 1
-	for i = 0 to length
-		cpu.disp[i] = 0
-	next i
+	DeleteMemblock(cpu.disp)
+	length = cpu.disp_width * cpu.disp_height
+	cpu.disp = CreateMemblock(length)
 	cpu.draw_flag = 1
 endfunction
 
@@ -55,18 +56,12 @@ function chip8emu_init(cpu ref as chip8cpu)
 		cpu.V[i] = 0
 	next i
 	
-	for i = 0 to cpu.disp.length
-		cpu.disp[i] = 0
-	next i
-	
-	cpu.disp_width = 64
-	cpu.disp_height = 32
-	
-	chip8emu_clear_disp(cpu)
+	DeleteMemblock(cpu.mem)
+	cpu.mem = CreateMemblock(4096)
 	
 	/* Load fontset */
     for i = 0 to chip8_fontset.length
-        cpu.mem[i] = chip8_fontset[i]
+		SetMemblockByte(cpu.mem, i, chip8_fontset[i])
     next i
 	
 	for i = 0 to cpu.stack.length
@@ -80,17 +75,22 @@ function chip8emu_init(cpu ref as chip8cpu)
 	cpu.delay_timer = 0
 	cpu.sound_timer = 0
 	cpu.mode = 0
-	cpu.draw_flag = 0
+	
+	cpu.disp_width = 64
+	cpu.disp_height = 32
+	chip8emu_clear_disp(cpu)
+	
+	/* load rom if available */
+	if cpu.rom > 0 
+		if GetMemblockSize(cpu.rom) > 0 then CopyMemblock(cpu.rom, cpu.mem, 0, 0x200, GetMemblockSize(cpu.rom))
+	endif
 endfunction
 
 function chip8emu_load_rom(cpu ref as chip8cpu, filename$)
-    romFile = OpenToRead(fileName$)
     idx = 0x200
     
-    while FileEOF(romFile) = 0
-        cpu.mem[idx] = ReadByte(romFile)
-        idx = idx + 1
-    endwhile
+    cpu.rom = CreateMemblockFromFile(filename$)
+    CopyMemblock(cpu.rom, cpu.mem, 0, 0x200, GetMemblockSize(cpu.rom))
 endfunction
 
 function chip8emu_timer_tick(cpu ref as chip8cpu)
@@ -102,7 +102,7 @@ function chip8emu_timer_tick(cpu ref as chip8cpu)
 endfunction
 
 function chip8emu_exec_cycle(cpu ref as chip8cpu)
-	cpu.opcode = cpu.mem[cpu.pc] << 8 || cpu.mem[cpu.pc + 1]
+	cpu.opcode = GetMemblockByte(cpu.mem, cpu.pc) << 8 || GetMemblockByte(cpu.mem, cpu.pc + 1)
 	select (cpu.opcode && 0xF000)
 		case 0x0000:
 			select (cpu.opcode)
@@ -127,7 +127,7 @@ function chip8emu_exec_cycle(cpu ref as chip8cpu)
 		endcase
 		
 		case 0x1000: /* 1NNN: absolute jump */
-			if (cpu.pc = 0x200) and ((cpu.mem[0x200] << 8 || cpu.mem[0x201]) = 0x1260)
+			if (cpu.pc = 0x200) and ((GetMemblockByte(cpu.mem, 0x200) << 8 || GetMemblockByte(cpu.mem, 0x201)) = 0x1260)
 				/* 64x64 hi-res mode */
 				cpu.mode = 1
 				cpu.disp_width = 64
@@ -290,7 +290,7 @@ function chip8emu_exec_cycle(cpu ref as chip8cpu)
 			if height = 0 then height = 0xF
 			
 			for i = 0 to height - 1
-				sprite[i] = cpu.mem[cpu.I + i]
+				sprite[i] = GetMemblockByte(cpu.mem, cpu.I + i)
 			next i
 
 			cpu.V[0xF] = 0
@@ -299,8 +299,10 @@ function chip8emu_exec_cycle(cpu ref as chip8cpu)
 					dx = Mod(xo + x, cpu.disp_width) /* display x or dest x*/
 					dy = Mod(yo + y,  cpu.disp_height)
 					if not ((sprite[y] && (0x80 >> x)) = 0) /* 0x80 -> 10000000b */
-						if cpu.V[0xF] = 0 and cpu.disp[(dx + (dy * 64))] > 0 then cpu.V[0xF] = 1
-						cpu.disp[dx + (dy * 64)] = cpu.disp[dx + (dy * 64)] ~~ 1
+						offset = dx + (dy * cpu.disp_width)
+						pixel = GetMemblockByte(cpu.disp, offset)
+						if (cpu.V[0xF] = 0) and (pixel > 0) then cpu.V[0xF] = 1
+						SetMemblockByte(cpu.disp, offset, pixel ~~ 1)
 					endif
 				next x
 			next y
@@ -365,16 +367,16 @@ function chip8emu_exec_cycle(cpu ref as chip8cpu)
 				endcase
 				case 0x0033: /* FX33: Store a Binary Coded Decimal (BCD) of register VX to memory started from I */
 					X = (cpu.opcode && 0x0F00) >> 8
-					cpu.mem[cpu.I]     = cpu.V[X] / 100
-					cpu.mem[cpu.I + 1] = Mod(cpu.V[X] / 10, 10)
-					cpu.mem[cpu.I + 2] = Mod(cpu.V[X], 10)
+					SetMemblockByte(cpu.mem, cpu.I,cpu.V[X] / 100)
+					SetMemblockByte(cpu.mem, cpu.I + 1, Mod(cpu.V[X] / 10, 10))
+					SetMemblockByte(cpu.mem, cpu.I + 2, Mod(cpu.V[X], 10))
 					inc cpu.pc, 2
 				endcase
 				case 0x0055: /* FX55: */
 					X = (cpu.opcode && 0x0F00) >> 8
 					
 					for i = 0 to X
-						cpu.mem[cpu.I+i] = cpu.V[i]
+						SetMemblockByte(cpu.mem, cpu.I+i, cpu.V[i])
 					next i
 
 					inc cpu.I, X + 1
@@ -384,7 +386,7 @@ function chip8emu_exec_cycle(cpu ref as chip8cpu)
 					X = (cpu.opcode && 0x0F00) >> 8
 					
 					for i = 0 to X
-						cpu.V[i] = cpu.mem[cpu.I + i]
+						cpu.V[i] = GetMemblockByte(cpu.mem, cpu.I + i)
 					next i
 					
 					inc cpu.I, X + 1

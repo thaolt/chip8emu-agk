@@ -20,7 +20,7 @@ function chip8emu_draw(cpu ref as chip8cpu, imgId)
 		color = MakeColor(32,60,50)
 		for y = 0 to 31
 			for x = 0 to 63
-				if cpu.disp[y*64 + x] > 0
+				if GetMemblockByte(cpu.disp, y*64 + x) > 0
 					dx = x*6
 					dy = y*6
 					DrawBox(dx, dy, dx+6, dy+5, color, color, color, color, 1)
@@ -47,10 +47,10 @@ function chip8emu_draw(cpu ref as chip8cpu, imgId)
 		color = MakeColor(32,60,50)
 		for y = 0 to cpu.disp_height - 1
 			for x = 0 to cpu.disp_width - 1
-				if cpu.disp[y*cpu.disp_width + x] > 0
+				if GetMemblockByte(cpu.disp, y*cpu.disp_width + x) > 0
 					dx = x*6
 					dy = y*6
-					DrawBox(ox + dx, dy, ox + dx+6, dy+5, color, color, color, color, 1)
+					DrawBox(ox + dx, dy, ox + dx+6, dy+6, color, color, color, color, 1)
 				endif
 			next x
 		next y

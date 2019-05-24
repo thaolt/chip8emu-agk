@@ -50,9 +50,9 @@ FILE_1=chip8emu.agc;-1
 FILE_2=chip8callback.agc;-1
 
 [files]
-FILE_NAME_0=1;main.agc;1128;0
-FILE_NAME_1=0;chip8emu.agc;1785;1
-FILE_NAME_2=0;chip8callback.agc;573;2
+FILE_NAME_0=1;main.agc;2874;0
+FILE_NAME_1=0;chip8emu.agc;1545;1
+FILE_NAME_2=0;chip8callback.agc;1631;2
 
 [project]
 description=

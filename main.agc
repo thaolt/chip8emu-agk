@@ -22,9 +22,9 @@ UseNewDefaultFonts( 1 ) // since version 2.0.20 we can use nicer default fonts
 SetScissor(0,0,0,0)
 
 screenBuf = CreateImageColor(0,0,0,0xff)
-SetImageMagFilter(screenBuf, 0)
-SetImageMinFilter(screenBuf, 0)
 ResizeImage(screenBuf, 448, 224)
+SetImageMagFilter(screenBuf, 0)
+SetImageMinFilter(screenBuf, 0) 
 sprDisplay = CreateSprite(screenBuf)
 SetSpriteSize(sprDisplay, 448, 224)
 SetSpriteY(sprDisplay, 60)
@@ -106,7 +106,7 @@ SetVirtualButtonAlpha(btnPWR, 255)
 SetVirtualButtonImageUp(btnPWR, LoadImage("pwrup.png"))
 SetVirtualButtonImageDown(btnPWR, LoadImage("pwrdn.png"))
 
-LoadSound(1, "beep.wav")
+LoadSoundOGG(1, "beep.ogg")
 
 emu as chip8cpu
 chip8emu_init(emu)
