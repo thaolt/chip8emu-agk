@@ -56,25 +56,21 @@ function chip8emu_draw(cpu ref as chip8cpu, imgId)
 		next y
 	endif
 	
-	
 	cpu.draw_flag = 0
 	SetRenderToScreen()
 	SetVirtualResolution(virtWidth,virtHeight)
 endfunction
-
-
-
 
 function chip8emu_beep(cpu ref as chip8cpu)
 	if beeping = 1 then exitfunction
 	beeping = 1
 	if cpu.sound_timer > 1
 		PlayMusicOGG(sndLongBeep)
+		VibrateDevice( 1 ) 
 	else
 		PlaySound(sndShortBeep)
 	endif
 endfunction
-
 
 function chip8emu_stopbeep(cpu ref as chip8cpu)
 	if GetMusicPlayingOGG(sndLongBeep) then StopMusicOGG(sndLongBeep)

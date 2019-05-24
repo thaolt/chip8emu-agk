@@ -88,9 +88,8 @@ endfunction
 
 function chip8emu_load_rom(cpu ref as chip8cpu, filename$)
     idx = 0x200
-    
+    if cpu.rom > 0 then DeleteMemblock(cpu.rom)
     cpu.rom = CreateMemblockFromFile(filename$)
-    CopyMemblock(cpu.rom, cpu.mem, 0, 0x200, GetMemblockSize(cpu.rom))
 endfunction
 
 function chip8emu_timer_tick(cpu ref as chip8cpu)
