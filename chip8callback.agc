@@ -63,7 +63,20 @@ function chip8emu_draw(cpu ref as chip8cpu, imgId)
 endfunction
 
 
+
+
 function chip8emu_beep(cpu ref as chip8cpu)
-	StopSound(1)
-	PlaySound(1)
+	if beeping = 1 then exitfunction
+	beeping = 1
+	if cpu.sound_timer > 1
+		PlayMusicOGG(sndLongBeep)
+	else
+		PlaySound(sndShortBeep)
+	endif
+endfunction
+
+
+function chip8emu_stopbeep(cpu ref as chip8cpu)
+	if GetMusicPlayingOGG(sndLongBeep) then StopMusicOGG(sndLongBeep)
+	beeping = 0
 endfunction

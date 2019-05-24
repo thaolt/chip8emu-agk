@@ -22,7 +22,6 @@ if deviceOS$ = "android"
 	RequestAdvertRefresh()
 endif
 
-
 SetVirtualResolution( 512, Round(GetDeviceHeight()*(512.0/GetDeviceWidth())) )
 SetOrientationAllowed( 1, 1, 0, 0 )
 SetSyncRate( 30, 0 ) // 30fps instead of 60 to save battery
@@ -114,7 +113,13 @@ SetVirtualButtonAlpha(btnPWR, 255)
 SetVirtualButtonImageUp(btnPWR, LoadImage("pwrup.png"))
 SetVirtualButtonImageDown(btnPWR, LoadImage("pwrdn.png"))
 
-LoadSoundOGG(1, "beep.ogg")
+global sndLongBeep
+global sndShortBeep
+global beeping
+beeping = 0
+sndShortBeep = LoadSoundOGG("short_beep.ogg")
+sndLongBeep = LoadMusicOGG("long_beep.ogg")
+
 
 emu as chip8cpu
 chip8emu_init(emu)

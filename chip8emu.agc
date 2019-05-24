@@ -98,6 +98,8 @@ function chip8emu_timer_tick(cpu ref as chip8cpu)
 	if cpu.sound_timer > 0 
 		chip8emu_beep(cpu)
 		dec cpu.sound_timer
+	else
+		chip8emu_stopbeep(cpu)
 	endif
 endfunction
 
