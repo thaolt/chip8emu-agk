@@ -27,8 +27,8 @@ function chip8emu_draw(cpu ref as chip8cpu, imgId)
 				endif
 			next x
 		next y
-		
 	else
+		/* 128x64 */
 		SetVirtualResolution(768,384)
 		ClearScreen()
 		
@@ -37,7 +37,7 @@ function chip8emu_draw(cpu ref as chip8cpu, imgId)
 		
 		ox = 0
 		
-		if (cpu.disp_width = 64) /* 64x64 */
+		if (cpu.disp_width = 64) /* hires: 64x64 */
 			color = MakeColor(32,60,50)
 			DrawBox(186, 0, 191, 383, color, color, color, color, 1)
 			DrawBox(576, 0, 581, 383, color, color, color, color, 1)
@@ -60,4 +60,10 @@ function chip8emu_draw(cpu ref as chip8cpu, imgId)
 	cpu.draw_flag = 0
 	SetRenderToScreen()
 	SetVirtualResolution(virtWidth,virtHeight)
+endfunction
+
+
+function chip8emu_beep(cpu ref as chip8cpu)
+	StopSound(1)
+	PlaySound(1)
 endfunction

@@ -17,7 +17,7 @@ endif
 
 SetVirtualResolution( 512, Round(GetDeviceHeight()*(512.0/GetDeviceWidth())) )
 SetOrientationAllowed( 1, 1, 0, 0 )
-SetSyncRate( 25, 0 ) // 30fps instead of 60 to save battery
+SetSyncRate( 30, 0 ) // 30fps instead of 60 to save battery
 UseNewDefaultFonts( 1 ) // since version 2.0.20 we can use nicer default fonts
 SetScissor(0,0,0,0)
 
@@ -106,10 +106,12 @@ SetVirtualButtonAlpha(btnPWR, 255)
 SetVirtualButtonImageUp(btnPWR, LoadImage("pwrup.png"))
 SetVirtualButtonImageDown(btnPWR, LoadImage("pwrdn.png"))
 
+LoadSound(1, "beep.wav")
+
 emu as chip8cpu
 chip8emu_init(emu)
 
-chip8emu_load_rom(emu, "roms/TETRIS.ch8")
+chip8emu_load_rom(emu, "roms/BRIX.ch8")
 
 lastSync# = Timer()
 lastCycle# = lastSync#
@@ -133,7 +135,7 @@ do
 		continue
 	endif
 	
-	if (now# - lastCycle# > 0.001) /* 1000 hz */
+	if (now# - lastCycle# > 0.004) /* 1000 hz */
 		chip8emu_exec_cycle(emu)
 		lastCycle# = Timer()
 		continue

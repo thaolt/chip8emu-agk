@@ -95,7 +95,10 @@ endfunction
 
 function chip8emu_timer_tick(cpu ref as chip8cpu)
 	if cpu.delay_timer > 0 then dec cpu.delay_timer
-	if cpu.sound_timer > 0 then dec cpu.sound_timer
+	if cpu.sound_timer > 0 
+		chip8emu_beep(cpu)
+		dec cpu.sound_timer
+	endif
 endfunction
 
 function chip8emu_exec_cycle(cpu ref as chip8cpu)
