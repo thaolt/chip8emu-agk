@@ -51,11 +51,11 @@ FILE_3=config.agc;-1
 FILE_4=ui_setup.agc;-1
 
 [files]
-FILE_NAME_0=0;main.agc;2504;0
-FILE_NAME_1=0;chip8emu.agc;2019;1
-FILE_NAME_2=0;chip8callback.agc;1727;2
-FILE_NAME_3=0;config.agc;0;3
-FILE_NAME_4=1;ui_setup.agc;0;4
+FILE_NAME_0=1;main.agc;75;0
+FILE_NAME_1=0;chip8emu.agc;8470;1
+FILE_NAME_2=0;chip8callback.agc;0;4
+FILE_NAME_3=0;config.agc;301;2
+FILE_NAME_4=0;ui_setup.agc;1999;3
 
 [project]
 description=

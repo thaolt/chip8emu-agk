@@ -66,7 +66,6 @@ function chip8emu_beep(cpu ref as chip8cpu)
 	beeping = 1
 	if cpu.sound_timer > 1
 		PlayMusicOGG(sndLongBeep)
-		VibrateDevice( 1 ) 
 	else
 		PlaySound(sndShortBeep)
 	endif

@@ -24,6 +24,7 @@ type chip8cpu
 	rom as integer
 
 	draw_flag as integer
+	skip_frame as integer
 endtype
 
 global chip8_fontset as integer[79] = [
@@ -78,6 +79,7 @@ function chip8emu_init(cpu ref as chip8cpu)
 	
 	cpu.disp_width = 64
 	cpu.disp_height = 32
+	cpu.skip_frame = 0
 	chip8emu_clear_disp(cpu)
 	
 	/* load rom if available */
@@ -100,10 +102,15 @@ function chip8emu_timer_tick(cpu ref as chip8cpu)
 	else
 		chip8emu_stopbeep(cpu)
 	endif
+	if cpu.skip_frame > 0
+		dec cpu.skip_frame
+		if (cpu.skip_frame = 0) then cpu.draw_flag = 1
+	endif
 endfunction
 
 function chip8emu_exec_cycle(cpu ref as chip8cpu)
 	cpu.opcode = GetMemblockByte(cpu.mem, cpu.pc) << 8 || GetMemblockByte(cpu.mem, cpu.pc + 1)
+	
 	select (cpu.opcode && 0xF000)
 		case 0x0000:
 			select (cpu.opcode)
@@ -307,8 +314,15 @@ function chip8emu_exec_cycle(cpu ref as chip8cpu)
 					endif
 				next x
 			next y
-
-			cpu.draw_flag = 1
+			
+			
+			if cpu.V[0xF] = 0
+				if cpu.skip_frame = 0 then cpu.draw_flag = 1
+			else
+				/* VF = 1 */
+				if cpu.skip_frame = 0 then cpu.skip_frame = 3
+			endif
+			
 			inc cpu.pc, 2
 		endcase
 		
