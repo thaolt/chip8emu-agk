@@ -1,8 +1,8 @@
 #include "chip8emu.agc"
 #include "chip8callback.agc"
+#include "menu.agc"
 
 #insert "config.agc"
-
 #insert "ui_setup.agc"
 
 global sndLongBeep
@@ -19,61 +19,91 @@ emu as chip8cpu
 chip8emu_load_rom(emu, "roms/BRIX.ch8")
 chip8emu_init(emu)
 
-desired_speed# = 400 /* hertz */
+cpu_speed# = 400 /* hertz */
 
-cpu_clk# = 1.0 / desired_speed#
+cpu_clk# = 1.0 / cpu_speed#
 tmr_clk# = 1.0 / 60.0
 refresh_rate# = 1.0 / 30.0
 
 lastSync# = Timer()
 lastCycle# = lastSync#
 lastTick# = lastSync#
+paused = 0
+
+menu as MenuConfig
+
+initMenu(menu, menuImg, btnUP, btnDN, btnSEL)
+
+renderMenu(menu)
 
 do
 	now# = Timer()
 	
 	if GetVirtualButtonReleased(btnRST)=1
+		paused = 0
 		chip8emu_init(emu)
 		Sync()
+		lastSync# = Timer()
 		continue
 	endif
 	
 	if (GetVirtualButtonReleased(btnPWR) = 1)
+		Sync()
 		exit
 	endif
 	
-	if (now# - lastCycle# > cpu_clk#)
-		chip8emu_exec_cycle(emu)
-		lastCycle# = Timer()
-		continue
-	endif
-	
-	if (now# - lastTick# > tmr_clk#)
-		chip8emu_timer_tick(emu)
-		lastTick# = Timer()
-		continue
-	endif
-	
-	if (emu.draw_flag > 0)
-		chip8emu_draw(emu, screenBuf)
-		continue
-	endif
-	
-	
-	if (now# - lastSync# > refresh_rate#)
-		select emu.mode
-			case 0:
-				SetSpriteVisible(sprGrid64, 1)
-				SetSpriteVisible(sprGrid128, 0)
-			endcase
-			case default:
-				SetSpriteVisible(sprGrid64, 0)
-				SetSpriteVisible(sprGrid128, 1)
-			endcase
-		endselect
-		print(ScreenFPS())
+	if (GetVirtualButtonReleased(btnMENU) = 1)
+		if paused = 0
+			paused = 1
+			SetSpriteVisible(sprDisplay, 0)
+			SetSpriteVisible(sprGrid64, 0)
+			SetSpriteVisible(sprGrid128, 0)
+			SetSpriteVisible(sprMenu, 1)
+		else
+			SetSpriteVisible(sprMenu, 0)
+			SetSpriteVisible(sprDisplay, 1)
+			paused = 0
+		endif
 		Sync()
-		lastSync# = Timer()
-    endif
+		continue
+	endif
+	
+	if paused = 0
+		if (now# - lastCycle# > cpu_clk#)
+			lastCycle# = Timer()
+			chip8emu_exec_cycle(emu)
+			continue
+		endif
+		
+		if (now# - lastTick# > tmr_clk#)
+			lastTick# = Timer()
+			chip8emu_timer_tick(emu)
+			continue
+		endif
+		
+		if (emu.draw_flag > 0)
+			chip8emu_draw(emu, screenBuf)
+			continue
+		endif
+		
+		if (now# - lastSync# > refresh_rate#)
+			select emu.mode
+				case 0:
+					SetSpriteVisible(sprGrid64, 1)
+					SetSpriteVisible(sprGrid128, 0)
+				endcase
+				case default:
+					SetSpriteVisible(sprGrid64, 0)
+					SetSpriteVisible(sprGrid128, 1)
+				endcase
+			endselect
+			Sync()
+			lastSync# = Timer()
+		endif
     
+    else
+		menuLoop(menu)
+	endif
 loop
+
+end

@@ -47,9 +47,7 @@ global chip8_fontset as integer[79] = [
 
 function chip8emu_clear_disp(cpu ref as chip8cpu)
 	DeleteMemblock(cpu.disp)
-	length = cpu.disp_width * cpu.disp_height
-	cpu.disp = CreateMemblock(length)
-	cpu.draw_flag = 1
+	cpu.disp = CreateMemblock(cpu.disp_width * cpu.disp_height)
 endfunction
 
 function chip8emu_init(cpu ref as chip8cpu)
@@ -80,7 +78,10 @@ function chip8emu_init(cpu ref as chip8cpu)
 	cpu.disp_width = 64
 	cpu.disp_height = 32
 	cpu.skip_frame = 0
+	cpu.draw_flag = 1
 	chip8emu_clear_disp(cpu)
+	
+	chip8emu_stopbeep(cpu)
 	
 	/* load rom if available */
 	if cpu.rom > 0 
@@ -89,7 +90,6 @@ function chip8emu_init(cpu ref as chip8cpu)
 endfunction
 
 function chip8emu_load_rom(cpu ref as chip8cpu, filename$)
-    idx = 0x200
     if cpu.rom > 0 then DeleteMemblock(cpu.rom)
     cpu.rom = CreateMemblockFromFile(filename$)
 endfunction
@@ -141,6 +141,7 @@ function chip8emu_exec_cycle(cpu ref as chip8cpu)
 				cpu.disp_width = 64
 				cpu.disp_height = 64
 				cpu.pc = 0x2C0  // Make the interperter jump to address 0x2c0
+				chip8emu_clear_disp(cpu)
 			else
 				cpu.pc = cpu.opcode && 0xFFF
 			endif

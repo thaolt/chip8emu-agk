@@ -10,7 +10,7 @@ orientation=1
 output_path=/home/thaolt/Workspaces/chip8emu-agk/chip8emu.apk
 ouya_icon_path=
 package_name=me.thaolt.chip8emu
-permission_flags=519
+permission_flags=7
 play_app_id=
 sdk_version=1
 arcore=0
@@ -49,13 +49,17 @@ FILE_1=chip8emu.agc;-1
 FILE_2=chip8callback.agc;-1
 FILE_3=config.agc;-1
 FILE_4=ui_setup.agc;-1
+FILE_5=menu.agc;-1
+FILE_6=menu.agc;-1
 
 [files]
-FILE_NAME_0=1;main.agc;75;0
-FILE_NAME_1=0;chip8emu.agc;8470;1
-FILE_NAME_2=0;chip8callback.agc;0;4
-FILE_NAME_3=0;config.agc;301;2
-FILE_NAME_4=0;ui_setup.agc;1999;3
+FILE_NAME_0=0;main.agc;94;0
+FILE_NAME_1=0;chip8emu.agc;0;4
+FILE_NAME_2=0;chip8callback.agc;173;3
+FILE_NAME_3=0;config.agc;743;1
+FILE_NAME_4=0;ui_setup.agc;407;2
+FILE_NAME_5=1;menu.agc;2395;6
+FILE_NAME_6=1;menu.agc;2395;6
 
 [project]
 description=

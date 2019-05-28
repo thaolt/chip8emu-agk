@@ -2,11 +2,21 @@
 screenBuf = CreateImageColor(0,0,0,0xff)
 ResizeImage(screenBuf, 448, 224)
 SetImageMagFilter(screenBuf, 0)
-SetImageMinFilter(screenBuf, 0) 
+SetImageMinFilter(screenBuf, 0)
+
 sprDisplay = CreateSprite(screenBuf)
 SetSpriteSize(sprDisplay, 448, 224)
 SetSpriteY(sprDisplay, 60)
 SetSpriteX(sprDisplay, 32)
+
+menuImg = CreateImageColor(105,105,3,0xff)
+ResizeImage(menuImg, 448, 224)
+
+sprMenu = CreateSprite(menuImg)
+SetSpriteSize(sprMenu, 448, 224)
+SetSpriteY(sprMenu, 60)
+SetSpriteX(sprMenu, 32)
+SetSpriteVisible(sprMenu, 0)
 
 sprBg = CreateSprite(LoadImage("bg.png"))
 SetSpriteTransparency(sprBg, 1)
@@ -60,20 +70,35 @@ SetVirtualButtonText(0xD, "D")
 AddVirtualButton(0xC, 394, 400, 80)
 SetVirtualButtonText(0xC, "C")
 
-imgBtnUp = LoadImage("red_btnup.png")
-imgBtnDn = LoadImage("red_btndn.png")
-
 btnRST = 0x11
-AddVirtualButton(btnRST, 465, 315, 40)
+AddVirtualButton(btnRST, 52, 315, 40)
 SetVirtualButtonAlpha(btnRST, 255)
-SetVirtualButtonImageUp(btnRST, imgBtnUp)
-SetVirtualButtonImageDown(btnRST, imgBtnDn)
+SetVirtualButtonImageUp(btnRST, LoadImage("red_btnup.png"))
+SetVirtualButtonImageDown(btnRST, LoadImage("red_btndn.png"))
 
-btnLD = 0x12
-AddVirtualButton(btnLD, 52, 315, 40)
-SetVirtualButtonText(btnLD, "LD")
+btnSEL = 0x12
+AddVirtualButton(btnSEL, 465, 315, 40)
+SetVirtualButtonAlpha(btnSEL, 255)
+SetVirtualButtonImageUp(btnSEL, LoadImage("blue_btnup.png"))
+SetVirtualButtonImageDown(btnSEL, LoadImage("blue_btndn.png"))
 
-btnPWR = 0x13
+btnMENU = 0x13
+AddVirtualButton(btnMENU, 256, 315, 40)
+SetVirtualButtonAlpha(btnMENU, 255)
+SetVirtualButtonImageUp(btnMENU, LoadImage("yellow_btnup.png"))
+SetVirtualButtonImageDown(btnMENU, LoadImage("yellow_btndn.png"))
+
+btnUP = 0x14
+AddVirtualButton(btnUP, 505, 140, 40)
+SetVirtualButtonAlpha(btnUP, 255)
+SetVirtualButtonText(btnUP, "UP")
+
+btnDN = 0x15
+AddVirtualButton(btnDN, 505, 200, 40)
+SetVirtualButtonAlpha(btnDN, 255)
+SetVirtualButtonText(btnDN, "DN")
+
+btnPWR = 0x16
 AddVirtualButton(btnPWR, 468, 29, 42)
 SetVirtualButtonAlpha(btnPWR, 255)
 SetVirtualButtonImageUp(btnPWR, LoadImage("pwrup.png"))
