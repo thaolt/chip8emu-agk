@@ -42,6 +42,8 @@ do
 	now# = Timer()
 	
 	if GetVirtualButtonReleased(btnRST)=1
+		SetSpriteVisible(sprMenu, 0)
+		SetSpriteVisible(sprDisplay, 1)
 		paused = 0
 		chip8emu_init(emu)
 		Sync()
@@ -61,6 +63,8 @@ do
 			SetSpriteVisible(sprGrid64, 0)
 			SetSpriteVisible(sprGrid128, 0)
 			SetSpriteVisible(sprMenu, 1)
+			resetMenu(menu)
+			renderMenu(menu)
 		else
 			SetSpriteVisible(sprMenu, 0)
 			SetSpriteVisible(sprDisplay, 1)

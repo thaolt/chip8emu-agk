@@ -35,6 +35,15 @@ type MenuConfig
 	fb_top
 endtype
 
+function resetMenu(cfg ref as MenuConfig)
+	cfg.selIdx = 0
+	cfg.stage = 0
+
+	cfg.cur_path = "/media/roms"
+	cfg.fb_top = 0
+	cfg.fb_sel = 0
+endfunction
+
 function initMenu(cfg ref as MenuConfig, imgId, btnUP, btnDN, btnSEL, sprMenu, sprDisplay)
 	cfg.w = 448
 	cfg.h = 224
