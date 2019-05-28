@@ -13,6 +13,9 @@ sndLongBeep = LoadMusicOGG("long_beep.ogg")
 
 global beeping
 beeping = 0
+global paused
+paused = 0
+
 
 emu as chip8cpu
 
@@ -28,11 +31,10 @@ refresh_rate# = 1.0 / 30.0
 lastSync# = Timer()
 lastCycle# = lastSync#
 lastTick# = lastSync#
-paused = 0
 
 menu as MenuConfig
 
-initMenu(menu, menuImg, btnUP, btnDN, btnSEL)
+initMenu(menu, menuImg, btnUP, btnDN, btnSEL, sprMenu, sprDisplay)
 
 renderMenu(menu)
 
@@ -102,7 +104,13 @@ do
 		endif
     
     else
-		menuLoop(menu)
+		if (menuLoop(menu) = 1)
+			chip8emu_load_rom(emu, menu.cur_path + "/" + menu.dir_entries[menu.fb_sel])
+			chip8emu_init(emu)
+			paused = 0
+			Sync()
+			lastSync# = Timer()
+		endif
 	endif
 loop
 
