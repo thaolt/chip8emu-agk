@@ -1,4 +1,3 @@
-
 [apk_settings]
 alias=
 app_icon_path=/home/thaolt/Workspaces/chip8emu-agk/media/icon.png
@@ -8,7 +7,7 @@ app_type=0
 url_scheme=
 keystore_path=
 orientation=1
-output_path=/home/thaolt/Desktop/chip8emu.apk
+output_path=/home/thaolt/Workspaces/chip8emu-agk/chip8emu.apk
 ouya_icon_path=
 package_name=me.thaolt.chip8emu
 permission_flags=7
@@ -57,8 +56,8 @@ FILE_NAME_0=0;main.agc;517;0
 FILE_NAME_1=0;chip8emu.agc;3378;4
 FILE_NAME_2=0;chip8callback.agc;274;3
 FILE_NAME_3=0;config.agc;743;1
-FILE_NAME_4=0;ui_setup.agc;407;2
-FILE_NAME_5=1;menu.agc;5768;5
+FILE_NAME_4=0;ui_setup.agc;138;2
+FILE_NAME_5=1;menu.agc;5637;5
 
 [project]
 description=

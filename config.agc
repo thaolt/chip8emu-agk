@@ -18,6 +18,10 @@ if deviceOS$ = "android"
 	CreateAdvert(5, 1, 2, 1)
 	SetAdvertVisible ( 1 )
 	RequestAdvertRefresh()
+	MakeFolder("roms")
+	SetFolder("roms")
+	MakeFolder("hires")
+	SetFolder("/media")
 endif
 
 SetVirtualResolution( 512, Round(GetDeviceHeight()*(512.0/GetDeviceWidth())) )
