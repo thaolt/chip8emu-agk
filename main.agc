@@ -1,32 +1,34 @@
 #include "chip8emu.agc"
 #include "chip8callback.agc"
 #include "menu.agc"
+#include "snd.agc"
 
 #insert "config.agc"
 #insert "ui_setup.agc"
 
-global sndLongBeep
-global sndShortBeep
+Type Emulation
+	paused
+	cpu_speed#
+	cpu_clk#
+	tmr_clk#
+	refresh_rate#
+EndType
 
-sndShortBeep = LoadSoundOGG("short_beep.ogg")
-sndLongBeep = LoadMusicOGG("long_beep.ogg")
+beepcfg as BeepConfig
+beep_config_init(beepcfg)
 
-global beeping
-beeping = 0
-global paused
-paused = 0
+cpu as chip8cpu
 
+chip8emu_load_rom(cpu, "roms/BRIX.ch8")
+chip8emu_init(cpu)
 
-emu as chip8cpu
+emu as Emulation
 
-chip8emu_load_rom(emu, "roms/BRIX.ch8")
-chip8emu_init(emu)
-
-cpu_speed# = 400 /* hertz */
-
-cpu_clk# = 1.0 / cpu_speed#
-tmr_clk# = 1.0 / 60.0
-refresh_rate# = 1.0 / 30.0
+emu.paused = 0
+emu.cpu_speed# = 400 /* hertz */
+emu.cpu_clk# = 1.0 / emu.cpu_speed#
+emu.tmr_clk# = 1.0 / 60.0
+emu.refresh_rate# = 1.0 / 30.0
 
 lastSync# = Timer()
 lastCycle# = lastSync#
@@ -44,8 +46,9 @@ do
 	if GetVirtualButtonReleased(btnRST)=1
 		SetSpriteVisible(sprMenu, 0)
 		SetSpriteVisible(sprDisplay, 1)
-		paused = 0
-		chip8emu_init(emu)
+		emu.paused = 0
+		chip8emu_init(cpu)
+		chip8emu_stopbeep(cpu, beepcfg)
 		Sync()
 		lastSync# = Timer()
 		continue
@@ -57,8 +60,8 @@ do
 	endif
 	
 	if (GetVirtualButtonReleased(btnMENU) = 1)
-		if paused = 0
-			paused = 1
+		if emu.paused = 0
+			emu.paused = 1
 			SetSpriteVisible(sprDisplay, 0)
 			SetSpriteVisible(sprGrid64, 0)
 			SetSpriteVisible(sprGrid128, 0)
@@ -68,37 +71,46 @@ do
 		else
 			SetSpriteVisible(sprMenu, 0)
 			SetSpriteVisible(sprDisplay, 1)
-			paused = 0
+			emu.paused = 0
 		endif
 		Sync()
 		continue
 	endif
 	
-	if paused = 0
-		if (now# - lastCycle# > cpu_clk#)
+	if emu.paused = 0
+		if (now# - lastCycle# > emu.cpu_clk#)
 			lastCycle# = Timer()
-			chip8emu_exec_cycle(emu)
+			chip8emu_exec_cycle(cpu)
 			continue
 		endif
 		
-		if (now# - lastTick# > tmr_clk#)
+		if (now# - lastTick# > emu.tmr_clk#)
 			lastTick# = Timer()
-			chip8emu_timer_tick(emu)
+			if cpu.sound_timer > 0 
+				chip8emu_beep(cpu, beepcfg)
+			else
+				chip8emu_stopbeep(cpu, beepcfg)
+			endif
+			if cpu.skip_frame > 0
+				dec cpu.skip_frame
+				if (cpu.skip_frame = 0) then cpu.draw_flag = 1
+			endif
+			chip8emu_timer_tick(cpu)
 			continue
 		endif
 		
-		if (emu.draw_flag > 0)
-			chip8emu_draw(emu, screenBuf)
+		if (cpu.draw_flag > 0)
+			chip8emu_draw(cpu, screenBuf)
 			continue
 		endif
 		
-		if (now# - lastSync# > refresh_rate#)
-			select emu.mode
-				case 0:
+		if (now# - lastSync# > emu.refresh_rate#)
+			select cpu.mode
+				case 0: /* 64x32 */
 					SetSpriteVisible(sprGrid64, 1)
 					SetSpriteVisible(sprGrid128, 0)
 				endcase
-				case default:
+				case default:  /* 64x64 */
 					SetSpriteVisible(sprGrid64, 0)
 					SetSpriteVisible(sprGrid128, 1)
 				endcase
@@ -108,10 +120,11 @@ do
 		endif
     
     else
-		if (menuLoop(menu) = 1)
-			chip8emu_load_rom(emu, menu.cur_path + "/" + menu.dir_entries[menu.fb_sel])
-			chip8emu_init(emu)
-			paused = 0
+		if (menuLoop(menu, emu) = 1)
+			chip8emu_load_rom(cpu, menu.cur_path + "/" + menu.dir_entries[menu.fb_sel])
+			chip8emu_init(cpu)
+			chip8emu_stopbeep(cpu, beepcfg)
+			emu.paused = 0
 			Sync()
 			lastSync# = Timer()
 		endif

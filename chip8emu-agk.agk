@@ -50,14 +50,16 @@ FILE_2=chip8callback.agc;-1
 FILE_3=config.agc;-1
 FILE_4=ui_setup.agc;-1
 FILE_5=menu.agc;-1
+FILE_6=snd.agc;-1
 
 [files]
-FILE_NAME_0=0;main.agc;517;0
-FILE_NAME_1=0;chip8emu.agc;3378;4
-FILE_NAME_2=0;chip8callback.agc;274;3
-FILE_NAME_3=0;config.agc;743;1
-FILE_NAME_4=0;ui_setup.agc;138;2
-FILE_NAME_5=1;menu.agc;5637;5
+FILE_NAME_0=0;main.agc;1868;0
+FILE_NAME_1=0;chip8emu.agc;8439;4
+FILE_NAME_2=0;chip8callback.agc;482;3
+FILE_NAME_3=0;config.agc;539;1
+FILE_NAME_4=0;ui_setup.agc;455;2
+FILE_NAME_5=0;menu.agc;4118;5
+FILE_NAME_6=1;snd.agc;111;6
 
 [project]
 description=

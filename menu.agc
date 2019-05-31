@@ -205,7 +205,7 @@ function renderLoadRom(cfg ref as MenuConfig)
 	SetVirtualResolution(virtWidth,virtHeight)
 endfunction
 
-function menuLoop(cfg ref as MenuConfig)
+function menuLoop(cfg ref as MenuConfig, emu ref as Emulation)
 	loadNewRom = 0
 	
 	select cfg.stage
@@ -225,7 +225,7 @@ function menuLoop(cfg ref as MenuConfig)
 					case 0:
 						SetSpriteVisible(cfg.sprMenu, 0)
 						SetSpriteVisible(cfg.sprDisplay, 1)
-						paused = 0
+						emu.paused = 0
 					endcase
 					case 1:
 						cfg.stage = 1

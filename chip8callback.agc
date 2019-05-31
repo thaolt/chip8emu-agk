@@ -28,7 +28,7 @@ function chip8emu_draw(cpu ref as chip8cpu, imgId)
 			next x
 		next y
 	else
-		/* 128x64 */
+		/* SCHIP: 128x64 */
 		SetVirtualResolution(768,384)
 		ClearScreen()
 		
@@ -61,17 +61,17 @@ function chip8emu_draw(cpu ref as chip8cpu, imgId)
 	SetVirtualResolution(virtWidth,virtHeight)
 endfunction
 
-function chip8emu_beep(cpu ref as chip8cpu)
-	if beeping = 1 then exitfunction
-	beeping = 1
+function chip8emu_beep(cpu ref as chip8cpu, beep ref as BeepConfig)
+	if beep.beeping = 1 then exitfunction
+	beep.beeping = 1
 	if cpu.sound_timer > 1
-		PlayMusicOGG(sndLongBeep)
+		PlayMusicOGG(beep.sndLongBeep)
 	else
-		PlaySound(sndShortBeep)
+		PlaySound(beep.sndShortBeep)
 	endif
 endfunction
 
-function chip8emu_stopbeep(cpu ref as chip8cpu)
-	if GetMusicPlayingOGG(sndLongBeep) then StopMusicOGG(sndLongBeep)
-	beeping = 0
+function chip8emu_stopbeep(cpu ref as chip8cpu, beep ref as BeepConfig)
+	if GetMusicPlayingOGG(beep.sndLongBeep) then StopMusicOGG(beep.sndLongBeep)
+	beep.beeping = 0
 endfunction

@@ -81,8 +81,6 @@ function chip8emu_init(cpu ref as chip8cpu)
 	cpu.draw_flag = 1
 	chip8emu_clear_disp(cpu)
 	
-	chip8emu_stopbeep(cpu)
-	
 	/* load rom if available */
 	if cpu.rom > 0 
 		if GetMemblockSize(cpu.rom) > 0 then CopyMemblock(cpu.rom, cpu.mem, 0, 0x200, GetMemblockSize(cpu.rom))
@@ -96,16 +94,7 @@ endfunction
 
 function chip8emu_timer_tick(cpu ref as chip8cpu)
 	if cpu.delay_timer > 0 then dec cpu.delay_timer
-	if cpu.sound_timer > 0 
-		chip8emu_beep(cpu)
-		dec cpu.sound_timer
-	else
-		chip8emu_stopbeep(cpu)
-	endif
-	if cpu.skip_frame > 0
-		dec cpu.skip_frame
-		if (cpu.skip_frame = 0) then cpu.draw_flag = 1
-	endif
+	if cpu.sound_timer > 0 then dec cpu.sound_timer
 endfunction
 
 function chip8emu_exec_cycle(cpu ref as chip8cpu)
