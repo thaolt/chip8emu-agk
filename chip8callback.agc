@@ -1,6 +1,12 @@
 function chip8emu_get_keystate(cpu ref as chip8cpu, idx as integer)
-	if (idx = 0) then idx = 0x10
-	keystate = GetVirtualButtonState(idx)
+	keystate = 0
+	if emu.is_mobile = 0
+		if (emu.romcfg.keymap[idx] > 0) then keystate = GetButtonState(emu.romcfg.keymap[idx])
+	endif
+	if keystate = 0
+		if (idx = 0) then idx = 0x10
+		keystate = GetVirtualButtonState(idx)
+	endif
 endfunction keystate
 
 
@@ -30,10 +36,8 @@ function chip8emu_draw(cpu ref as chip8cpu, imgId)
 	else
 		/* SCHIP: 128x64 */
 		SetVirtualResolution(768,384)
+		SetClearColor(105,105,3)
 		ClearScreen()
-		
-		color = MakeColor(105,105,3)
-		DrawBox(0, 0, 768, 384, color, color, color, color, 1)
 		
 		ox = 0
 		

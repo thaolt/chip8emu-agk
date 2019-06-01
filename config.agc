@@ -29,5 +29,5 @@ SetOrientationAllowed( 1, 1, 0, 0 )
 SetSyncRate( 30, 0 ) // 30fps instead of 60 to save battery
 UseNewDefaultFonts( 1 ) // since version 2.0.20 we can use nicer default fonts
 SetScissor(0,0,0,0)
-
+SetRandomSeed( GetUnixTime()  )
 

@@ -41,11 +41,11 @@ deep_link=
 [html5_settings]
 commands_used=0
 dynamic_memory=1
-output_path=E:\\Workspaces\\chip8emu-agk\\HTML5
+output_path=/home/thaolt/Workspaces/chip8emu-agk/html5
 
 [projectfiles]
 FILE_0=main.agc;-1
-FILE_1=chip8emu.agc;-1
+FILE_1=chip8cpu.agc;-1
 FILE_2=chip8callback.agc;-1
 FILE_3=config.agc;-1
 FILE_4=ui_setup.agc;-1
@@ -53,13 +53,11 @@ FILE_5=menu.agc;-1
 FILE_6=snd.agc;-1
 
 [files]
-FILE_NAME_0=0;main.agc;1868;0
-FILE_NAME_1=0;chip8emu.agc;8439;4
-FILE_NAME_2=0;chip8callback.agc;482;3
-FILE_NAME_3=0;config.agc;539;1
-FILE_NAME_4=0;ui_setup.agc;455;2
-FILE_NAME_5=0;menu.agc;4118;5
-FILE_NAME_6=1;snd.agc;111;6
+FILE_NAME_0=0;main.agc;453;4
+FILE_NAME_1=0;chip8callback.agc;1825;1
+FILE_NAME_2=0;config.agc;436;0
+FILE_NAME_3=1;menu.agc;5080;2
+FILE_NAME_4=0;snd.agc;0;3
 
 [project]
 description=

@@ -7,11 +7,6 @@ type MenuConfig
 	
 	font
 	
-	txtRSM
-	txtLR
-	txtHLP
-	txtABT
-	
 	selIdx /* selected index */
 	
 	btnUP
@@ -30,7 +25,6 @@ type MenuConfig
 	/* ----- for file browser ----- */
 	cur_path as String
 	dir_entries  as String[]
-	fb_selIdx
 	fb_sel
 	fb_top
 endtype
@@ -48,7 +42,7 @@ function initMenu(cfg ref as MenuConfig, imgId, btnUP, btnDN, btnSEL, sprMenu, s
 	cfg.w = 448
 	cfg.h = 224
 	cfg.imgId = imgId
-	cfg.font = LoadFont("DisposableDroidBB.otf")
+	cfg.font = LoadFont("GNUUnifont9FullHintInstrUCSUR.ttf")
 	cfg.btnUP = btnUP
 	cfg.btnDN = btnDN
 	cfg.btnSEL = btnSEL
@@ -60,39 +54,6 @@ function initMenu(cfg ref as MenuConfig, imgId, btnUP, btnDN, btnSEL, sprMenu, s
 	cfg.cur_path = "/media/roms"
 	cfg.fb_top = 0
 	cfg.fb_sel = 0
-	
-	cfg.txtRSM = CreateText("RESUME")
-	SetTextPosition(cfg.txtRSM, 224, 60)
-	SetTextFont(cfg.txtRSM, cfg.font)
-	SetTextSize(cfg.txtRSM, 20)
-	SetTextColor(cfg.txtRSM,32,60,50,0xff)
-	SetTextAlignment(cfg.txtRSM, 1)
-	SetTextVisible(cfg.txtRSM, 0)
-	
-	cfg.txtLR = CreateText("LOAD ROM")
-	SetTextPosition(cfg.txtLR, 224, 90)
-	SetTextFont(cfg.txtLR, cfg.font)
-	SetTextSize(cfg.txtLR, 20)
-	SetTextColor(cfg.txtLR,32,60,50,0xff)
-	SetTextAlignment(cfg.txtLR, 1)
-	SetTextVisible(cfg.txtLR, 0)
-
-	cfg.txtHLP = CreateText("HELP")
-	SetTextPosition(cfg.txtHLP, 224,120)
-	SetTextFont(cfg.txtHLP, cfg.font)
-	SetTextSize(cfg.txtHLP, 20)
-	SetTextColor(cfg.txtHLP,32,60,50,0xff)
-	SetTextAlignment(cfg.txtHLP, 1)
-	SetTextVisible(cfg.txtHLP, 0)
-	
-	cfg.txtABT = CreateText("ABOUT")
-	SetTextPosition(cfg.txtABT, 224,150)
-	SetTextFont(cfg.txtABT, cfg.font)
-	SetTextSize(cfg.txtABT, 20)
-	SetTextColor(cfg.txtABT,32,60,50,0xff)
-	SetTextAlignment(cfg.txtABT, 1)
-	SetTextVisible(cfg.txtABT, 0)	
-
 endfunction
 
 function renderMenu(cfg ref as MenuConfig)
@@ -107,29 +68,37 @@ function renderMenu(cfg ref as MenuConfig)
 	SetClearColor(105,105,3)
 	ClearScreen()
 	
-	SetTextVisible(cfg.txtRSM, 1)
-	SetTextColor(cfg.txtRSM,32,60,50,0xff)
-	if cfg.selIdx = 0 then SetTextColor(cfg.txtRSM,0xff,0xff,0xff,0xff)
-	DrawText(cfg.txtRSM)
-	SetTextVisible(cfg.txtRSM, 0)
+	lbl = CreateText("")
+	SetTextFont(lbl, cfg.font)
+	SetTextSize(lbl, 30)
+	SetTextAlignment(lbl, 1)
+	SetTextBold(lbl, 1)
 	
-	SetTextVisible(cfg.txtLR, 1)
-	SetTextColor(cfg.txtLR,32,60,50,0xff)
-	if cfg.selIdx = 1 then SetTextColor(cfg.txtLR,0xff,0xff,0xff,0xff)
-	DrawText(cfg.txtLR)
-	SetTextVisible(cfg.txtLR, 0)
+	SetTextString(lbl, "RESUME")
+	SetTextPosition(lbl, 224, 50)
+	SetTextColor(lbl,32,60,50,0xff)
+	if cfg.selIdx = 0 then SetTextColor(lbl,0xff,0xff,0xff,0xff)
+	DrawText(lbl)
 	
-	SetTextVisible(cfg.txtHLP, 1)
-	SetTextColor(cfg.txtHLP,32,60,50,0xff)
-	if cfg.selIdx = 2 then SetTextColor(cfg.txtHLP,0xff,0xff,0xff,0xff)
-	DrawText(cfg.txtHLP)
-	SetTextVisible(cfg.txtHLP, 0)
+	SetTextString(lbl, "LOAD ROM")
+	SetTextPosition(lbl, 224, 80)
+	SetTextColor(lbl,32,60,50,0xff)
+	if cfg.selIdx = 1 then SetTextColor(lbl,0xff,0xff,0xff,0xff)
+	DrawText(lbl)
 	
-	SetTextVisible(cfg.txtABT, 1)
-	SetTextColor(cfg.txtABT,32,60,50,0xff)
-	if cfg.selIdx = 3 then SetTextColor(cfg.txtABT,0xff,0xff,0xff,0xff)
-	DrawText(cfg.txtABT)
-	SetTextVisible(cfg.txtABT, 0)
+	SetTextString(lbl, "HELP")
+	SetTextPosition(lbl, 224, 110)
+	SetTextColor(lbl,32,60,50,0xff)
+	if cfg.selIdx = 2 then SetTextColor(lbl,0xff,0xff,0xff,0xff)
+	DrawText(lbl)
+	
+	SetTextString(lbl, "ABOUT")
+	SetTextPosition(lbl, 224, 140)
+	SetTextColor(lbl,32,60,50,0xff)
+	if cfg.selIdx = 3 then SetTextColor(lbl,0xff,0xff,0xff,0xff)
+	DrawText(lbl)
+	
+	DeleteText(lbl)
 	
 	SetRenderToScreen()
 	SetClearColor(0,0,0)
@@ -168,13 +137,14 @@ function renderLoadRom(cfg ref as MenuConfig)
 	
 	virtWidth = GetVirtualWidth()
 	virtHeight = GetVirtualHeight()
+	selcolor = MakeColor(32,60,50)
 	
 	SetRenderToImage(cfg.imgId, 0)
 	SetVirtualResolution(cfg.w, cfg.h)
 	
 	SetClearColor(105,105,3)
 	ClearScreen()
-	
+
 	lbl = CreateText("")
 	
 	SetTextFont(lbl, cfg.font)
@@ -193,7 +163,12 @@ function renderLoadRom(cfg ref as MenuConfig)
 			SetTextColor(lbl,32,60,50,0xff)
 		endif
 		SetTextPosition(lbl, 5, 20*(i-cfg.fb_top) + 2)
-		SetTextString(lbl, cfg.dir_entries[i])
+		If RIGHT(cfg.dir_entries[i], 1) = "/"
+			SetTextString(lbl, Chr( 0x1F4C2 ) + cfg.dir_entries[i])
+		else
+			SetTextString(lbl, cfg.dir_entries[i])
+		endif
+		SetTextBold(lbl, 1)
 		DrawText(lbl)
 	next i
 	
@@ -239,13 +214,13 @@ function menuLoop(cfg ref as MenuConfig, emu ref as Emulation)
 		case 1:
 			if (GetVirtualButtonState(cfg.btnUP) = 1)
 				renderLoadRom(cfg)
-				Sleep(100)
+				Sleep(50)
 				Sync()
 			endif
 
 			if (GetVirtualButtonState(cfg.btnDN) = 1) 
 				renderLoadRom(cfg)
-				Sleep(100)
+				Sleep(50)
 				Sync()
 			endif
 
@@ -258,6 +233,7 @@ function menuLoop(cfg ref as MenuConfig, emu ref as Emulation)
 						cfg.cur_path = cfg.cur_path + "/" + LEFT(name$, len(name$) - 1)
 					endif
 					scanForRoms(cfg.dir_entries, cfg.cur_path)
+					cfg.fb_sel = 0
 					renderLoadRom(cfg)
 				elseif (RIGHT(name$,4) = ".ch8")
 					SetSpriteVisible(cfg.sprMenu, 0)
