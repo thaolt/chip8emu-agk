@@ -40,7 +40,7 @@ EndType
 
 function emu_load_rom(filename as String)
 	chip8emu_load_rom(emu.cpu, filename)
-	cfgname$ = LEFT(filename, Len(filename) - 4) + ".json"
+	cfgname$ = LEFT(filename, Len(filename) - 4) + ".cfg"
 	If GetFileExists(cfgname$)
 		fromcfg = CreateMemblockFromFile(cfgname$)
 		emu.romcfg.fromJSON(GetMemblockString(fromcfg, 0, GetMemblockSize(fromcfg)))
@@ -70,7 +70,7 @@ emu.tmr_clk# = 1.0 / 60.0
 emu.refresh_rate# = 1.0 / 30.0
 
 beep_config_init(emu.beepcfg)
-emu_load_rom("roms/SUPERCHIP/ANT.ch8")
+emu_load_rom("roms/Tetris_Fran_Dachille_1991.ch8")
 chip8emu_init(emu.cpu)
 
 lastSync# = Timer()

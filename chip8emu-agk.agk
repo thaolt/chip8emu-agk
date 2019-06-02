@@ -53,11 +53,12 @@ FILE_5=menu.agc;-1
 FILE_6=snd.agc;-1
 
 [files]
-FILE_NAME_0=0;main.agc;453;4
-FILE_NAME_1=0;chip8callback.agc;1825;1
-FILE_NAME_2=0;config.agc;436;0
-FILE_NAME_3=1;menu.agc;5080;2
-FILE_NAME_4=0;snd.agc;0;3
+FILE_NAME_0=1;main.agc;506;0
+FILE_NAME_1=0;chip8cpu.agc;15733;5
+FILE_NAME_2=0;chip8callback.agc;1733;2
+FILE_NAME_3=0;config.agc;436;1
+FILE_NAME_4=0;menu.agc;2558;3
+FILE_NAME_5=0;snd.agc;109;4
 
 [project]
 description=

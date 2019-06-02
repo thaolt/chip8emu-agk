@@ -71,7 +71,7 @@ function chip8emu_beep(cpu ref as chip8cpu, beep ref as BeepConfig)
 	if cpu.sound_timer > 1
 		PlayMusicOGG(beep.sndLongBeep)
 	else
-		PlaySound(beep.sndShortBeep)
+		PlaySound(beep.sndShortBeep,60)
 	endif
 endfunction
 
