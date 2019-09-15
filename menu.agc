@@ -6,6 +6,7 @@ type MenuConfig
 	h
 	
 	font
+	fontSize
 	
 	selIdx /* selected index */
 	
@@ -42,7 +43,8 @@ function initMenu(cfg ref as MenuConfig, imgId, btnUP, btnDN, btnSEL, sprMenu, s
 	cfg.w = 448
 	cfg.h = 224
 	cfg.imgId = imgId
-	cfg.font = LoadFont("GNUUnifont9FullHintInstrUCSUR.ttf")
+	cfg.font = LoadFont("ThinPixel7-1Yq0.ttf")
+	cfg.fontSize = 28
 	cfg.btnUP = btnUP
 	cfg.btnDN = btnDN
 	cfg.btnSEL = btnSEL
@@ -70,7 +72,7 @@ function renderMenu(cfg ref as MenuConfig)
 	
 	lbl = CreateText("")
 	SetTextFont(lbl, cfg.font)
-	SetTextSize(lbl, 30)
+	SetTextSize(lbl, cfg.fontSize)
 	SetTextAlignment(lbl, 1)
 	SetTextBold(lbl, 1)
 	
@@ -148,7 +150,7 @@ function renderLoadRom(cfg ref as MenuConfig)
 	lbl = CreateText("")
 	
 	SetTextFont(lbl, cfg.font)
-	SetTextSize(lbl, 20)
+	SetTextSize(lbl, cfg.fontSize*2/3)
 	SetTextAlignment(lbl, 0)
 	SetTextVisible(lbl, 1)
 	
@@ -164,7 +166,7 @@ function renderLoadRom(cfg ref as MenuConfig)
 		endif
 		SetTextPosition(lbl, 5, 20*(i-cfg.fb_top) + 2)
 		If RIGHT(cfg.dir_entries[i], 1) = "/"
-			SetTextString(lbl, Chr( 0x1F4C2 ) + cfg.dir_entries[i])
+			SetTextString(lbl, "[] " + cfg.dir_entries[i])
 		else
 			SetTextString(lbl, cfg.dir_entries[i])
 		endif
