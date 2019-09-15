@@ -18,6 +18,8 @@ version_name=
 version_number=0
 firebase_config_path=
 deep_link=
+admob_app_id=
+snapchat_client_id=
 
 [ipa_settings]
 app_icon_path=
@@ -37,6 +39,8 @@ uses_ads=0
 version_number=
 firebase_config_path=
 deep_link=
+admob_app_id=
+snapchat_client_id=
 
 [html5_settings]
 commands_used=0
@@ -53,9 +57,9 @@ FILE_5=menu.agc;-1
 FILE_6=snd.agc;-1
 
 [files]
-FILE_NAME_0=1;main.agc;506;0
-FILE_NAME_1=0;chip8cpu.agc;15733;5
-FILE_NAME_2=0;chip8callback.agc;1733;2
+FILE_NAME_0=0;main.agc;1692;0
+FILE_NAME_1=1;chip8cpu.agc;2546;5
+FILE_NAME_2=0;chip8callback.agc;168;2
 FILE_NAME_3=0;config.agc;436;1
 FILE_NAME_4=0;menu.agc;2558;3
 FILE_NAME_5=0;snd.agc;109;4

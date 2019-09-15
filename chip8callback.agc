@@ -1,7 +1,7 @@
 function chip8emu_get_keystate(cpu ref as chip8cpu, idx as integer)
 	keystate = 0
 	if emu.is_mobile = 0
-		if (emu.romcfg.keymap[idx] > 0) then keystate = GetButtonState(emu.romcfg.keymap[idx])
+		if (emu.romcfg.keymap[idx] > 0) then keystate = GetRawKeyState(emu.romcfg.keymap[idx])
 	endif
 	if keystate = 0
 		if (idx = 0) then idx = 0x10

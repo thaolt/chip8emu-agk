@@ -85,10 +85,10 @@ function chip8emu_init(cpu ref as chip8cpu)
     for i = 0 to chip8_font_8x5.length
 		SetMemblockByte(cpu.mem, i, chip8_font_8x5[i])
     next i
-    
-    for i = chip8_font_8x5.length + 1 to chip8_font_8x10.length
-		SetMemblockByte(cpu.mem, i, chip8_font_8x10[i])
-    next i
+    /*
+    for i = 0 to chip8_font_8x10.length
+		SetMemblockByte(cpu.mem, 80 + i, chip8_font_8x10[i])
+    next i*/
 	
 	for i = 0 to cpu.stack.length
 		cpu.stack[i] = 0
@@ -335,6 +335,11 @@ function chip8emu_exec_cycle(cpu ref as chip8cpu)
 					inc cpu.pc, 2
 				endcase
 				case 0x0006: /* 8XY6: Vx>>=1 Stores the least significant bit of VX in VF and then shifts VX to the right by 1 */
+					
+					/* Vx = Vy >> 1
+					 * Store the value of register VY shifted right one bit in register VX
+					 * Set register VF to the least significant bit prior to the shift
+					 */
 					X = (cpu.opcode && 0x0F00) >> 8
 					cpu.V[0xF] = cpu.V[X] && 0x1
 					cpu.V[X] = cpu.V[X] >> 1

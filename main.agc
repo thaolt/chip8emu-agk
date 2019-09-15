@@ -19,7 +19,7 @@ Type RomConfig
 	 *   keymap[7] = 5 ; Q: No Map
 	 */
 	cpu_speed
-	keymap as integer[15]
+	keymap as Integer[15]
 	help_pc as String
 	help_mobile as String
 EndType
@@ -70,7 +70,7 @@ emu.tmr_clk# = 1.0 / 60.0
 emu.refresh_rate# = 1.0 / 30.0
 
 beep_config_init(emu.beepcfg)
-emu_load_rom("roms/Tetris_Fran_Dachille_1991.ch8")
+emu_load_rom("roms/BRIX.ch8")
 chip8emu_init(emu.cpu)
 
 lastSync# = Timer()
