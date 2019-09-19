@@ -43,51 +43,43 @@ SetSpriteX(sprGlossy, 32)
 for i = 1 to 9
 	AddVirtualButton(i, 118 + (mod(i-1,3) * 92), 400 + ((i-1)/3) * 92, 80)
 	SetVirtualButtonImageUp(i, LoadImage("btn" + Str(i) + "up.png"))
-SetVirtualButtonImageDown(i,  LoadImage("btn" + Str(i) + "dn.png"))
-	SetVirtualButtonText(i, Str(i))
+    SetVirtualButtonImageDown(i,  LoadImage("btn" + Str(i) + "dn.png"))
 next i
 
 AddVirtualButton(0xA, 118, 676, 80)
 SetVirtualButtonAlpha(0xA, 255)
 SetVirtualButtonImageUp(0xA, LoadImage("btnAup.png"))
 SetVirtualButtonImageDown(0xA,  LoadImage("btnAdn.png"))
-SetVirtualButtonText(0xA, "A")
 
 AddVirtualButton(0x10, 210, 676, 80)
 SetVirtualButtonAlpha(0x10, 255)
 SetVirtualButtonImageUp(0x10, LoadImage("btn0up.png"))
 SetVirtualButtonImageDown(0x10,  LoadImage("btn0dn.png"))
-SetVirtualButtonText(0x10, "0")
 
 AddVirtualButton(0xB, 302, 676, 80)
 SetVirtualButtonAlpha(0xB, 255)
 SetVirtualButtonImageUp(0xB, LoadImage("btnBup.png"))
 SetVirtualButtonImageDown(0xB,  LoadImage("btnBdn.png"))
-SetVirtualButtonText(0xB, "B")
 
 AddVirtualButton(0xF, 394, 676, 80)
 SetVirtualButtonAlpha(0xF, 255)
 SetVirtualButtonImageUp(0xF, LoadImage("btnFup.png"))
 SetVirtualButtonImageDown(0xF,  LoadImage("btnFdn.png"))
-SetVirtualButtonText(0xF, "F")
 
 AddVirtualButton(0xE, 394, 584, 80)
 SetVirtualButtonAlpha(0xE, 255)
 SetVirtualButtonImageUp(0xE, LoadImage("btnEup.png"))
 SetVirtualButtonImageDown(0xE,  LoadImage("btnEdn.png"))
-SetVirtualButtonText(0xE, "E")
 
 AddVirtualButton(0xD, 394, 492, 80)
 SetVirtualButtonAlpha(0xD, 255)
 SetVirtualButtonImageUp(0xD, LoadImage("btnDup.png"))
 SetVirtualButtonImageDown(0xD,  LoadImage("btnDdn.png"))
-SetVirtualButtonText(0xD, "D")
 
 AddVirtualButton(0xC, 394, 400, 80)
 SetVirtualButtonAlpha(0xC, 255)
 SetVirtualButtonImageUp(0xC, LoadImage("btnCup.png"))
 SetVirtualButtonImageDown(0xC,  LoadImage("btnCdn.png"))
-SetVirtualButtonText(0xC, "C")
 
 btnRST = 0x11
 AddVirtualButton(btnRST, 52, 315, 40)
@@ -110,12 +102,14 @@ SetVirtualButtonImageDown(btnMENU, LoadImage("yellow_btndn.png"))
 btnUP = 0x14
 AddVirtualButton(btnUP, 505, 140, 40)
 SetVirtualButtonAlpha(btnUP, 255)
-SetVirtualButtonText(btnUP, "UP")
+SetVirtualButtonImageUp(btnUP, LoadImage("btnUPup.png"))
+SetVirtualButtonImageDown(btnUP,  LoadImage("btnUPdn.png"))
 
 btnDN = 0x15
 AddVirtualButton(btnDN, 505, 200, 40)
 SetVirtualButtonAlpha(btnDN, 255)
-SetVirtualButtonText(btnDN, "DN")
+SetVirtualButtonImageUp(btnDN, LoadImage("btnDNup.png"))
+SetVirtualButtonImageDown(btnDN,  LoadImage("btnDNdn.png"))
 
 btnPWR = 0x16
 AddVirtualButton(btnPWR, 468, 29, 42)
